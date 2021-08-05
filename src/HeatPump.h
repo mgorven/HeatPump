@@ -84,8 +84,8 @@ class HeatPump
 {
   private:
     static const int PACKET_LEN = 22;
-    static const int PACKET_SENT_INTERVAL_MS = 1000;
-    static const int PACKET_INFO_INTERVAL_MS = 2000;
+    static const int PACKET_SENT_INTERVAL_MS = 250;
+    static const int PACKET_INFO_INTERVAL_MS = 1000;
     static const int PACKET_TYPE_DEFAULT = 99;
 
     static const int CONNECT_LEN = 8;

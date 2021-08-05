@@ -132,7 +132,7 @@ bool HeatPump::update() {
   if(packetType == RCVD_PKT_UPDATE_SUCCESS) {
     // call sync() to get the latest settings from the heatpump for autoUpdate, which should now have the updated settings
     if(autoUpdate) { //this sync will happen regardless, but autoUpdate needs it sooner than later.
-	    while(!canSend(true)) {
+	    while(!canSend(false)) {
 		    delay(10);
 	    }
 	    sync(RQST_PKT_SETTINGS);
@@ -145,7 +145,7 @@ bool HeatPump::update() {
 }
 
 void HeatPump::sync(byte packetType) {
-  if((!connected) || (millis() - lastRecv > (PACKET_SENT_INTERVAL_MS * 10))) {
+  if((!connected) || (millis() - lastRecv > (PACKET_INFO_INTERVAL_MS * 10))) {
     connect(NULL);
   }
   else if(canRead()) {
@@ -154,7 +154,7 @@ void HeatPump::sync(byte packetType) {
   else if(!waitForRead && autoUpdate && !firstRun && wantedSettings != currentSettings && packetType == PACKET_TYPE_DEFAULT) {
     update();
   }
-  else if(canSend(true)) {
+  else if(canSend(packetType == PACKET_TYPE_DEFAULT)) {
     byte packet[PACKET_LEN] = {};
     createInfoPacket(packet, packetType);
     writePacket(packet, PACKET_LEN);
@@ -536,7 +536,6 @@ int HeatPump::readPacket() {
       header[0] = _HardSerial->read();
       if(header[0] == HEADER[0]) {
         foundStart = true;
-        delay(100); // found that this delay increases accuracy when reading, might not be needed though
       }
     }
 
