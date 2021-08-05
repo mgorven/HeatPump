@@ -426,7 +426,7 @@ bool HeatPump::canSend(bool isInfo) {
 }  
 
 bool HeatPump::canRead() {
-  return (waitForRead && (millis() - PACKET_SENT_INTERVAL_MS) > lastSend);
+  return ((millis() - PACKET_SENT_INTERVAL_MS) > lastSend && _HardSerial->available() > 0);
 }
 
 byte HeatPump::checkSum(byte bytes[], int len) {
