@@ -151,7 +151,7 @@ void HeatPump::sync(byte packetType) {
   else if(canRead()) {
     readPacket();
   }
-  else if(autoUpdate && !firstRun && wantedSettings != currentSettings && packetType == PACKET_TYPE_DEFAULT) {
+  else if(!waitForRead && autoUpdate && !firstRun && wantedSettings != currentSettings && packetType == PACKET_TYPE_DEFAULT) {
     update();
   }
   else if(canSend(true)) {
@@ -608,6 +608,7 @@ int HeatPump::readPacket() {
               receivedSettings.wideVane    = lookupByteMapValue(WIDEVANE_MAP, WIDEVANE, 8, data[10] & 0x0F);
 		    wideVaneAdj = (data[10] & 0xF0) == 0x80 ? true : false;
               
+              bool pendingUpdate = wantedSettings != currentSettings;
               if(settingsChangedCallback && receivedSettings != currentSettings) {
                 currentSettings = receivedSettings;
                 settingsChangedCallback();
@@ -616,7 +617,7 @@ int HeatPump::readPacket() {
               }
 
               // if this is the first time we have synced with the heatpump, set wantedSettings to receivedSettings
-              if(firstRun || (autoUpdate && externalUpdate)) {
+              if(firstRun || (autoUpdate && externalUpdate && !pendingUpdate)) {
                 wantedSettings = currentSettings;
                 firstRun = false;
               }
