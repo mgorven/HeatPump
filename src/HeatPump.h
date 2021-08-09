@@ -85,7 +85,7 @@ class HeatPump
   private:
     static const int PACKET_LEN = 22;
     static const int PACKET_SENT_INTERVAL_MS = 250;
-    static const int PACKET_INFO_INTERVAL_MS = 1000;
+    static const int PACKET_INFO_INTERVAL_MS = 5000;
     static const int PACKET_TYPE_DEFAULT = 99;
 
     static const int CONNECT_LEN = 8;
@@ -97,14 +97,14 @@ class HeatPump
     const byte INFOHEADER[INFOHEADER_LEN]  = {0xfc, 0x42, 0x01, 0x30, 0x10};
     
  
-    static const int INFOMODE_LEN = 6;
+    static const int INFOMODE_LEN = 3;
     const byte INFOMODE[INFOMODE_LEN] = {
       0x02, // request a settings packet - RQST_PKT_SETTINGS
       0x03, // request the current room temp - RQST_PKT_ROOM_TEMP
-      0x04, // unknown
-      0x05, // request the timers - RQST_PKT_TIMERS
+      //0x04, // unknown
+      //0x05, // request the timers - RQST_PKT_TIMERS
       0x06, // request status - RQST_PKT_STATUS
-      0x09  // request standby mode (maybe?) RQST_PKT_STANDBY
+      //0x09  // request standby mode (maybe?) RQST_PKT_STANDBY
     };
 
     const int RCVD_PKT_FAIL            = 0;
